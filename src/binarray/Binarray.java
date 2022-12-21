@@ -96,7 +96,7 @@ public class Binarray {
         if (noElements > 0 && indexStart < noElements) {
             int res = indexStart;
 
-            for (int i = indexStart; i < noElements; i++) {
+            for (int i = indexStart + 1; i < noElements; i++) {
                 if (array[i].compareTo(array[res]) > 0)
                     res = i;
             }
@@ -126,7 +126,7 @@ public class Binarray {
         if (noElements > 0 && indexStart < noElements) {
             int res = indexStart;
 
-            for (int i = indexStart; i < noElements; i++) {
+            for (int i = indexStart + 1; i < noElements; i++) {
                 if (array[i].compareTo(array[res]) < 0)
                     res = i;
             }
@@ -140,25 +140,22 @@ public class Binarray {
     // === MOVE ELEMENTS ===
 
     public static <T> boolean traverseLeft(T[] array, int noElements, int index) {
-        if (index < noElements - 1) {
-            array[index] = array[index + 1];
-            traverseLeft(array, noElements, index + 1);
+        if (index < noElements - 1 && index >= 0) {
+            if (noElements - (index + 1) >= 0)
+                System.arraycopy(array, index + 1, array, index + 1 - 1, noElements - (index + 1));
 
+            array[noElements - 1] = null;
             return true;
         } else
             return false;
     }
 
     public static <T> boolean traverseRight(T[] array, int noElements, int index) {
-        if (array.length > noElements) {
-            if (noElements == index) {
-                array[index] = null;
-                return true;
-            }
-            else {
-                array[noElements] = array[noElements - 1];
-                return traverseRight(array, noElements - 1, index);
-            }
+        if (array.length > noElements && index < noElements && index >= 0) {
+            System.arraycopy(array, index, array, index + 1, noElements - index);
+
+            array[index] = null;
+            return true;
         } else
             return false;
     }
