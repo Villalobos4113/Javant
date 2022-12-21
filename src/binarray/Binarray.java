@@ -49,12 +49,12 @@ public class Binarray {
 
     // === INSERT & DELETE ===
 
-    public static <T> boolean insert(T data, T[] array, int noElements, int index) {
+    public static <T> boolean insert(T value, T[] array, int noElements, int index) {
         boolean res = false;
 
         if (array.length > noElements && index < array.length && index >= 0) {
             if (traverseRight(array, noElements, index)) {
-                array[index] = data;
+                array[index] = value;
                 res = true;
             }
         }
@@ -196,13 +196,15 @@ public class Binarray {
 
     // === CLEAR ===
 
-    public static <T> void clear(T[] array, int noElements) {
-        for (int i = 0; i < noElements; i++)
-            array[i] = null;
-    }
-
     public static <T> void clear(T[] array) {
         Arrays.fill(array, null);
+    }
+
+
+    // === FILL ===
+
+    public static <T> void fill(T[] array, T value) {
+        Arrays.fill(array, value);
     }
 
 
@@ -278,13 +280,13 @@ public class Binarray {
 
     // Sequential Search
 
-    public static <T> int search(T data, T[] array, int noElementos) {
-        int res = -1, i = 0, j = noElementos - 1;
+    public static <T> int search(T value, T[] array, int noElements) {
+        int res = -1, i = 0, j = noElements - 1;
 
         while (res == -1 && i <= j) {
-            if (array[i].equals(data))
+            if (array[i].equals(value))
                 res = i;
-            else if (array[j].equals(data))
+            else if (array[j].equals(value))
                 res = j;
             i++;
             j--;
@@ -295,8 +297,8 @@ public class Binarray {
 
     // Binary Search
 
-    public static <T extends Comparable<T>> int binarySearch(T data, T[] array, int noElementos) {
-        return binarySearch(data, array, noElementos, 0);
+    public static <T extends Comparable<T>> int binarySearch(T value, T[] array, int noElements) {
+        return binarySearch(value, array, noElements, 0);
     }
 
     private static <T extends Comparable<T>> int binarySearch(T data, T[] array,  int top, int bottom) {
@@ -319,9 +321,9 @@ public class Binarray {
 
     // === SORT ===
 
-    public static <T extends Comparable<T>> void sort(T[] array, int noElementos) {
-        for (int i = 0; i < noElementos; i++) {
-            int posMin = min(array, noElementos, i);
+    public static <T extends Comparable<T>> void sort(T[] array, int noElements) {
+        for (int i = 0; i < noElements; i++) {
+            int posMin = min(array, noElements, i);
             T min = array[posMin];
             array[posMin] = array[i];
             array[i] = min;
@@ -339,10 +341,10 @@ public class Binarray {
         return sb.toString();
     }
 
-    public static <T> String join(T[] array, int noElementos) {
+    public static <T> String join(T[] array, int noElements) {
         StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < noElementos; i++)
+        for (int i = 0; i < noElements; i++)
             sb.append(array[i]);
 
         return sb.toString();
@@ -360,14 +362,14 @@ public class Binarray {
         return sb.toString();
     }
 
-    public static <T> String join(T[] array, int noElementos, char regex) {
+    public static <T> String join(T[] array, int noElements, char regex) {
         StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < noElementos - 1; i++) {
+        for (int i = 0; i < noElements - 1; i++) {
             sb.append(array[i]).append(regex);
         }
 
-        sb.append(array[noElementos - 1]);
+        sb.append(array[noElements - 1]);
 
         return sb.toString();
     }
@@ -384,14 +386,14 @@ public class Binarray {
         return sb.toString();
     }
 
-    public static <T> String join(T[] array, int noElementos, String regex) {
+    public static <T> String join(T[] array, int noElements, String regex) {
         StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < noElementos - 1; i++) {
+        for (int i = 0; i < noElements - 1; i++) {
             sb.append(array[i]).append(regex);
         }
 
-        sb.append(array[noElementos - 1]);
+        sb.append(array[noElements - 1]);
 
         return sb.toString();
     }
