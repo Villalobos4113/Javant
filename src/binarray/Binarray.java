@@ -3,7 +3,6 @@ package binarray;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
 /**
  * @author Fernando Villalobos Betancourt
@@ -17,15 +16,18 @@ public class Binarray {
     public static <T> String toString(T[] array, int noElements) {
         StringBuilder sb = new StringBuilder();
 
-        if (noElements != 0) {
-            sb.append("[");
+        if (array != null) {
+            if (noElements != 0) {
+                sb.append("[");
 
-            for (int i = 0; i < noElements - 1; i++)
-                sb.append(array[i]).append(", ");
+                for (int i = 0; i < noElements - 1; i++)
+                    sb.append(array[i]).append(", ");
 
-            sb.append(array[noElements - 1]).append("]");
+                sb.append(array[noElements - 1]).append("]");
+            } else
+                sb.append("[]");
         } else
-            sb.append("[]");
+            sb.append("null");
 
         return sb.toString();
     }
@@ -33,15 +35,18 @@ public class Binarray {
     public static <T> String toString(T[] array) {
         StringBuilder sb = new StringBuilder();
 
-        if (array.length != 0) {
-            sb.append("[");
+        if (array != null) {
+            if (array.length != 0) {
+                sb.append("[");
 
-            for (int i = 0; i < array.length - 1; i++)
-                sb.append(array[i]).append(", ");
+                for (int i = 0; i < array.length - 1; i++)
+                    sb.append(array[i]).append(", ");
 
-            sb.append(array[array.length - 1]).append("]");
+                sb.append(array[array.length - 1]).append("]");
+            } else
+                sb.append("[]");
         } else
-            sb.append("[]");
+            sb.append("null");
 
         return sb.toString();
     }
@@ -196,64 +201,109 @@ public class Binarray {
 
     // === CLEAR ===
 
-    public static <T> void clear(T[] array) {
-        Arrays.fill(array, null);
+    @SafeVarargs
+    public static <T> void clear(T[]... arrays) {
+        for (T[] array : arrays)
+            Arrays.fill(array, null);
     }
 
 
     // === FILL ===
 
-    public static <T> void fill(T[] array, T value) {
-        Arrays.fill(array, value);
+    @SafeVarargs
+    public static <T> void fill(T value, T[]... arrays) {
+        for (T[] array : arrays)
+            Arrays.fill(array, value);
     }
 
 
-    // === EXTEND ===
+    // === SET ===
 
-    public static <T> T[] extend(T[] arrayA, int noElementsA, T[] arrayB, int noElementsB) {
-        T[] res = (T[]) Array.newInstance(arrayA[0].getClass(), noElementsA + noElementsB);
-
-        if (noElementsA >= 0)
-            System.arraycopy(arrayA, 0, res, 0, noElementsA);
-
-        if (noElementsB >= 0)
-            System.arraycopy(arrayB, 0, res, noElementsA, noElementsB);
-
-        return res;
-    }
+    // Union
 
     @SafeVarargs
-    public static <T> T[] extend(T[]... arrays) {
+    public static <T> T[] union(T[]... arrays) {
         ArrayList<T> res = new ArrayList<>();
 
         for (T[] array : arrays) {
-            Collections.addAll(res, array);
+            for (T value : array) {
+                if (value != null)
+                    if (!res.contains(value))
+                        res.add(value);
+            }
         }
 
-        return res.toArray((T[]) Array.newInstance(res.get(0).getClass(), res.size()));
+        if (!res.isEmpty())
+            return res.toArray((T[]) Array.newInstance(res.get(0).getClass(), res.size()));
+        else
+            return null;
     }
 
-    public static <T> T[] extend(T[] arrayA, int noElementsA, Iterable<T> iterable) {
+    // Intersection
 
-        ArrayList<T> res = new ArrayList<>(Arrays.asList(arrayA).subList(0, noElementsA));
-
-        for (T data : iterable)
-            res.add(data);
-
-        return res.toArray((T[]) Array.newInstance(res.get(0).getClass(), res.size()));
-
-    }
-
-    public static <T> T[] extend(T[] arrayA, Iterable<T> iterable) {
+    @SafeVarargs
+    public static <T> T[] intersection(T[]... arrays) {
         ArrayList<T> res = new ArrayList<>();
+        T[] union = union(arrays);
+        boolean verif;
+        int i;
 
-        Collections.addAll(res, arrayA);
+        if (union != null) {
+            for (T value : union) {
+                verif = true;
+                i = 0;
 
-        for (T data : iterable)
-            res.add(data);
+                while (i < arrays.length && verif) {
+                    if (search(value, arrays[i]) < 0)
+                        verif = false;
+                    i++;
+                }
 
-        return res.toArray((T[]) Array.newInstance(res.get(0).getClass(), res.size()));
+                if (verif)
+                    res.add(value);
+            }
+        }
 
+        if (!res.isEmpty())
+            return res.toArray((T[]) Array.newInstance(res.get(0).getClass(), res.size()));
+        else
+            return null;
+    }
+
+    // Difference
+
+    @SafeVarargs
+    public static <T> T[] difference(T[]... arrays) {
+        ArrayList<T> res = new ArrayList<>();
+        T[] union = union(arrays);
+        boolean verif1, verif2;
+        int i;
+
+        if (union != null) {
+            for (T value : union) {
+                verif1 = false;
+                verif2 = false;
+                i = 0;
+
+                while (i < arrays.length && !verif2) {
+                    if (search(value, arrays[i]) >= 0) {
+                        if (!verif1)
+                            verif1 = true;
+                        else
+                            verif2 = true;
+                    }
+                    i++;
+                }
+
+                if (verif1 && !verif2)
+                    res.add(value);
+            }
+        }
+
+        if (!res.isEmpty())
+            return res.toArray((T[]) Array.newInstance(res.get(0).getClass(), res.size()));
+        else
+            return null;
     }
 
 
@@ -287,6 +337,21 @@ public class Binarray {
             if (array[i].equals(value))
                 res = i;
             else if (array[j].equals(value))
+                res = j;
+            i++;
+            j--;
+        }
+
+        return res;
+    }
+
+    public static <T> int search(T value, T[] array) {
+        int res = -1, i = 0, j = array.length - 1;
+
+        while (res == -1 && i <= j) {
+            if (array[i] != null && array[i].equals(value))
+                res = i;
+            else if (array[j] != null && array[j].equals(value))
                 res = j;
             i++;
             j--;
