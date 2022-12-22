@@ -41,6 +41,8 @@ public class Datai {
 
     // Phone & address generator
 
+    public static String phone() { return "55 " + Stringe.zfill(Integer.toString((int) (Math.random() * 10000)), 4) + " " + Stringe.zfill(Integer.toString((int) (Math.random() * 10000)), 4); }
+
     public static String phone(String prefix) { return prefix + " 55 " + Stringe.zfill(Integer.toString((int) (Math.random() * 10000)), 4) + " " + Stringe.zfill(Integer.toString((int) (Math.random() * 10000)), 4); }
 
     public static String address() { return streets[(int) (Math.random() * streets.length)] + " " + (int) (Math.random() * 100); }
