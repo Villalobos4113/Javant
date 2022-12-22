@@ -27,9 +27,9 @@ public class Stringe {
             return str;
     }
 
-    public static String leftFill(String str, int size, char regex) {
+    public static String leftFill(String str, int size, char chr) {
         if (size > str.length()) {
-            return Character.toString(regex).repeat(size - str.length()) + str;
+            return Character.toString(chr).repeat(size - str.length()) + str;
         } else
             return str;
     }
@@ -43,9 +43,9 @@ public class Stringe {
             return str;
     }
 
-    public static String rightFill(String str, int size, char regex) {
+    public static String rightFill(String str, int size, char chr) {
         if (size > str.length()) {
-            return str + Character.toString(regex).repeat(size - str.length());
+            return str + Character.toString(chr).repeat(size - str.length());
         } else
             return str;
     }
@@ -87,22 +87,22 @@ public class Stringe {
 
     // ===== COUNT =====
 
-    public static int count(String str, char prefix) {
+    public static int count(String str, char toFound) {
         int res = 0;
 
         for (int i = 0; i < str.length(); i++) {
-            if (str.charAt(i) == prefix)
+            if (str.charAt(i) == toFound)
                 res++;
         }
 
         return res;
     }
 
-    public static int count(String str, String prefix) {
+    public static int count(String str, String toFound) {
         int res = 0;
 
         for (int i = 0; i < str.length(); i++) {
-            if (str.startsWith(prefix, i))
+            if (str.startsWith(toFound, i))
                 res++;
         }
 
