@@ -137,4 +137,31 @@ public class Stringe {
         } else
             return "";
     }
+
+
+    // ===== NUMBER =====
+
+    public static String number(String strNum) {
+        if (isNumeric(strNum)) {
+            String res = "";
+            String[] separated = strNum.split("\\.");
+            int comma = 0;
+
+            for (int i = separated[0].length() - 1; i >= 0; i--) {
+                res = separated[0].charAt(i) + res;
+                comma++;
+
+                if (comma == 3 && i != 0) {
+                    res = "," + res;
+                    comma = 0;
+                }
+            }
+
+            if (separated.length == 2)
+                res += "." + separated[1];
+
+            return res;
+        } else
+            return strNum;
+    }
 }
