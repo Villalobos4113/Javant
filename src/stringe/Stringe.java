@@ -142,25 +142,25 @@ public class Stringe {
     // ===== NUMBER =====
 
     public static String number(String strNum) {
-        if (isNumeric(strNum)) {
-            String res = "";
-            String[] separated = strNum.split("\\.");
-            int comma = 0;
+        String[] separated;
 
-            for (int i = separated[0].length() - 1; i >= 0; i--) {
-                res = separated[0].charAt(i) + res;
-                comma++;
+        if (isNumeric(strNum) && (separated = strNum.split("\\."))[0].length() > 3) {
+            int noCommas = (separated[0].length() - 1) / 3, noNumbersBeginning = separated[0].length() % 3;
 
-                if (comma == 3 && i != 0) {
-                    res = "," + res;
-                    comma = 0;
-                }
+            if (noNumbersBeginning == 0)
+                noNumbersBeginning = 3;
+
+            StringBuilder res = new StringBuilder(separated[0].substring(0, noNumbersBeginning));
+
+            for (int i = 0; i < noCommas; i++) {
+                res.append(',').append(separated[0], noNumbersBeginning, noNumbersBeginning + 3);
+                noNumbersBeginning += 3;
             }
 
             if (separated.length == 2)
-                res += "." + separated[1];
+                res.append(".").append(separated[1]);
 
-            return res;
+            return res.toString();
         } else
             return strNum;
     }
